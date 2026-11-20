@@ -17,8 +17,8 @@ return {
 			paths = vim.fs.joinpath(vim.fn.stdpath("config"), "lua", "snippets"),
 		})
 
-		vim.keymap.set("i", "<C-k>", function()
-			ls.expand()
-		end)
+		-- vim.keymap.set("i", "<C-k>", function()
+		-- 	ls.expand()
+		-- end)
 	end,
 }

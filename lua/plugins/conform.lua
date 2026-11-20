@@ -16,6 +16,7 @@ return {
 			rust = { "rustfmt" },
 			markdown = { "prettierd", "prettier" },
 			html = { "prettierd", "prettier" },
+			json = { "prettierd", "prettier" },
 		},
 		-- Set default options
 		default_format_opts = {
