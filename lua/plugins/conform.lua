@@ -17,6 +17,7 @@ return {
 			markdown = { "prettierd", "prettier" },
 			json = { "prettierd", "prettier" },
 			html = { "prettierd", "prettier" },
+			json = { "prettierd", "prettier" },
 		},
 		-- Set default options
 		default_format_opts = {

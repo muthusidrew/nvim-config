@@ -7,8 +7,8 @@ keymap({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = 
 -- Move to window using the <ctrl> hjkl keys
 keymap("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window" })
 keymap("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window" })
-keymap("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window" })
-keymap("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window" })
+-- keymap("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window" })
+-- keymap("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window" })
 
 -- Resize window using <ctrl> arrow keys
 keymap("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
@@ -57,11 +57,11 @@ end, { desc = "Clear search register" })
 -- Explorer
 -- keymap('n', '<leader>pv', ':Ex<CR>') -- netrw, commented out after getting neotree
 keymap("n", "<leader>vc", function()
-  vim.cmd("cd " .. vim.fn.stdpath("config"))
+	vim.cmd("cd " .. vim.fn.stdpath("config"))
 end)
 
 keymap("n", "<leader>rr", function()
-vim.cmd("split | terminal cargo run")
+	vim.cmd("split | terminal cargo run")
 end, { desc = "Run Rust project" })
 
 keymap("n", "<leader>ha", ":lua vim.diagnostic.open_float()<cr>")
@@ -69,14 +69,14 @@ keymap("n", "<leader>ha", ":lua vim.diagnostic.open_float()<cr>")
 keymap("n", "<leader>y", '"+y')
 
 -- Expand snippet
-keymap({ "i", "s" }, "<C-k>", function()
-	require("luasnip").expand()
-end, { desc = "Expand snippet" })
+-- keymap({ "i", "s" }, "<C-k>", function()
+-- 	require("luasnip").expand()
+-- end, { desc = "Expand snippet" })
 
 -- Jump forward/backward in snippet
 keymap({ "i", "s" }, "<C-j>", function()
 	require("luasnip").jump(1)
 end, { desc = "Jump forward" })
-keymap({ "i", "s" }, "<C-k>", function()
-	require("luasnip").jump(-1)
-end, { desc = "Jump backward" })
+-- keymap({ "i", "s" }, "<C-k>", function()
+-- 	require("luasnip").jump(-1)
+-- end, { desc = "Jump backward" })

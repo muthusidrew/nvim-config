@@ -151,7 +151,7 @@ end
 local GREEK_NAMES =
 	"alpha|beta|gamma|Gamma|delta|Delta|epsilon|zeta|eta|theta|Theta|iota|kappa|lambda|Lambda|mu|nu|xi|Xi|omicron|pi|Pi|rho|sigma|Sigma|tau|upsilon|Upsilon|phi|Phi|chi|psi|Psi|omega|Omega"
 local GREEK = "(?:" .. GREEK_NAMES .. ")(?:\\.alt)?"
-local SYMBOL = "(?:nabla|diff|ell|infinity|parallel|perp|forall|exists|emptyset|dagger|star|square)"
+local SYMBOL = "(?:nabla|ell|infinity|parallel|perp|forall|exists|emptyset|dagger|star|square)"
 local ACCENT = "hat|tilde|macron|arrow|underline|overline|bold|bb|cal|upright|dot\\.double|dot"
 
 -- Matrix delimiter lookup
@@ -257,8 +257,8 @@ return {
 	ms("invs", { t("^(-1)") }),
 
 	ms("conj", { t("^*") }),
-	ms("Re", { t('op("Re")') }),
-	ms("Im", { t('op("Im")') }),
+	-- ms("Re", { t('op("Re")') }),
+	-- ms("Im", { t('op("Im")') }),
 	ms("bf", wrap("bold(", ")")),
 	ms("rm", wrap("upright(", ")")),
 
@@ -383,14 +383,14 @@ return {
 	-- ----------------------------------------------------------
 	-- Derivatives and integrals
 	-- ----------------------------------------------------------
-	ms("par", { t("frac( diff "), i(1, "y"), t(", diff "), i(2, "x"), t(" ) "), i(3) }),
+	ms("par", { t("frac( partial "), i(1, "y"), t(", partial "), i(2, "x"), t(" ) "), i(3) }),
 
 	mr([[par(\d)]], {
-		t("frac( diff^"),
+		t("frac( partial^"),
 		cap(1),
 		t(" "),
 		i(1, "y"),
-		t(", diff "),
+		t(", partial "),
 		i(2, "x"),
 		t("^"),
 		cap(1),
@@ -399,11 +399,11 @@ return {
 	}),
 
 	ms("parn", {
-		t("frac( diff^("),
+		t("frac( partial^("),
 		i(1, "n"),
 		t(") "),
 		i(2, "y"),
-		t(", diff "),
+		t(", partial "),
 		i(3, "x"),
 		t("^("),
 		rep(1),
@@ -414,7 +414,7 @@ return {
 	-- manual (not auto) snippet: pa<letter><letter>  e.g. paxy
 	mr(
 		[[pa([A-Za-z])([A-Za-z])]],
-		{ t("frac( diff "), cap(1), t(", diff "), cap(2), t(" ) "), i(0) },
+		{ t("frac( partial "), cap(1), t(", partial "), cap(2), t(" ) "), i(0) },
 		{ snippetType = "snippet" }
 	),
 

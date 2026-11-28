@@ -5,7 +5,7 @@ return {
 
 		version = "1.*",
 		opts = {
-			keymap = { preset = "default" },
+			keymap = { preset = "default", ["<C-k>"] = false },
 
 			appearance = {
 				nerd_font_variant = "mono",
