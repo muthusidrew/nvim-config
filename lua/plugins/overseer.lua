@@ -44,6 +44,14 @@ return {
 				end
 			end
 
+			local function common_components()
+				return {
+					{ "on_output_quickfix", open = true },
+					"on_exit_set_status",
+					"default",
+				}
+			end
+
 			-- C build and run
 			require("overseer").register_template({
 				name = "Build and Run C File",
@@ -52,20 +60,34 @@ return {
 				builder = function()
 					local file = vim.fn.expand("%:p")
 					local output = vim.fn.expand("%:r")
-					local run = is_win and ('"' .. output .. '"') or ("./" .. output)
-					local sc =
-						shell_cmd(string.format('gcc -Wall -Wextra -std=c17 "%s" -o "%s" && %s', file, output, run))
-					return vim.tbl_extend("force", sc, {
-						components = {
-							{ "on_output_quickfix", open = true },
-							"on_exit_set_status",
-							"default",
-						},
-					})
+
+					if is_win then
+						output = output .. ".exe"
+						-- cmd.exe parses the && chain; quoting is done once, by us.
+						-- No outer cmd /c wrapper needed because Overseer will spawn
+						-- cmd directly with these args.
+						local cmdline =
+							string.format('gcc -Wall -Wextra -std=c17 "%s" -o "%s" && "%s"', file, output, output)
+						return {
+							cmd = "cmd",
+							args = { "/c", cmdline },
+							components = common_components(),
+						}
+					end
+
+					local sc = shell_cmd(
+						string.format(
+							"gcc -Wall -Wextra -std=c17 %s -o %s && %s",
+							vim.fn.shellescape(file),
+							vim.fn.shellescape(output),
+							vim.fn.shellescape("./" .. output)
+						)
+					)
+					return vim.tbl_extend("force", sc, { components = common_components() })
 				end,
 			})
 
-			-- Python run with venv detection
+			-- Python: run directly, no shell at all
 			require("overseer").register_template({
 				name = "Run Python File",
 				desc = "Execute current Python file (auto venv detection)",
@@ -85,19 +107,18 @@ return {
 
 					local python_cmd = venv_python or (is_win and "python" or "python3")
 
-					-- Build a single command string
-					local command = python_cmd .. " " .. vim.fn.shellescape(file)
-
-					return vim.tbl_extend("force", shell_cmd(command), {
+					return {
+						cmd = { python_cmd }, -- table → CreateProcess directly
+						args = { file }, -- Overseer quotes each arg itself
 						components = {
 							{ "on_output_quickfix", open = true },
 							"on_exit_set_status",
 							"default",
 						},
-						env = {
-							VIRTUAL_ENV = venv_python and vim.fn.fnamemodify(python_cmd, ":h:h") or nil,
-						},
-					})
+						env = venv_python and {
+							VIRTUAL_ENV = vim.fn.fnamemodify(venv_python, ":h:h"),
+						} or nil,
+					}
 				end,
 			})
 
@@ -117,16 +138,11 @@ return {
 						}
 					end
 
-					local project_dir = vim.fn.fnamemodify(cargo_toml, ":h")
-					local sc =
-						shell_cmd(string.format('cargo run --quiet --manifest-path "%s/Cargo.toml"', project_dir))
-					return vim.tbl_extend("force", sc, {
-						components = {
-							{ "on_output_quickfix", open = true },
-							"on_exit_set_status",
-							"default",
-						},
-					})
+					return {
+						cmd = "cargo",
+						args = { "run", "--quiet", "--manifest-path", cargo_toml },
+						components = common_components(),
+					}
 				end,
 			})
 		end,

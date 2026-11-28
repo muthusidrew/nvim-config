@@ -15,6 +15,7 @@ return {
 			tex = { "latexindent" },
 			rust = { "rustfmt" },
 			markdown = { "prettierd", "prettier" },
+			json = { "prettierd", "prettier" },
 			html = { "prettierd", "prettier" },
 		},
 		-- Set default options
